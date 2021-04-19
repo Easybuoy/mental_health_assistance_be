@@ -1,4 +1,4 @@
-import models from "../database/models";
+import User from "../database/models/User";
 import { verifyToken } from "../utils";
 
 /**
@@ -42,7 +42,7 @@ export const validateToken = async (req, res, next) => {
 
     if (data) {
       req.user_id = data.id;
-      const existingUser = await models.User.findOne({
+      const existingUser = await User.findOne({
         where: { id: req.user_id },
       });
       if (!existingUser) {

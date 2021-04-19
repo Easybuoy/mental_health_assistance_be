@@ -1,7 +1,5 @@
-import { Op } from "sequelize";
-
-import models from "../database/models";
-import BaseController from "../controllers/base";
+import User from '../database/models/User';
+import BaseController from '../controllers/base';
 
 class AuthMiddleware extends BaseController {
   /**
@@ -14,26 +12,24 @@ class AuthMiddleware extends BaseController {
    */
   async validateSignup(req, res, next) {
     const { email, phone } = req.body;
-    const existingUser = await models.User.findOne({
-      where: {
-        [Op.or]: [{ phone: req.body.phone }, { email: req.body.email }],
-      },
+    const existingUser = await User.findOne({
+      $or: [{ phone: phone }, { email: email }],
     });
-
+    console.log(existingUser);
     if (existingUser) {
       if (
         existingUser.phone === req.body.phone &&
         existingUser.email === req.body.email
       ) {
-        return super.error(res, 400, "Email and Phone already exists");
+        return super.error(res, 400, 'Email and Phone already exists');
       }
 
       if (existingUser.phone === req.body.phone) {
-        return super.error(res, 400, "Phone already exists");
+        return super.error(res, 400, 'Phone already exists');
       }
 
       if (existingUser.email === req.body.email) {
-        return super.error(res, 400, "Email already exists");
+        return super.error(res, 400, 'Email already exists');
       }
     }
     next();

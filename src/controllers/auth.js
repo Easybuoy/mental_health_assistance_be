@@ -1,8 +1,9 @@
-import models from "../database/models";
 import BaseController from "./base";
 import { generatePhoneAuthCode, generateToken } from "../utils";
 import TwilioService from "../services/twilio";
 import configVariables from "../config";
+
+import User from '../database/models/User';
 
 const twilioController = new TwilioService();
 
@@ -20,7 +21,7 @@ class Auth extends BaseController {
   async register(req, res) {
     try {
       const generatedPhoneAuthCode = generatePhoneAuthCode();
-      const user = await models.User.create({
+      const user = await User.create({
         ...req.body,
         isActive: true,
         phoneVerificationCode: generatedPhoneAuthCode,
@@ -35,14 +36,7 @@ class Auth extends BaseController {
         createdAt,
         updatedAt,
       } = user;
-      const body = `Dear ${fullName}, your phone number verification code is ${generatedPhoneAuthCode}.`;
-      sendAccountVerificationCode(
-        body,
-        configVariables.TWILIO_PHONE_NUMBER,
-        phone,
-        user,
-        "isPhoneVerificationCodeSent"
-      );
+      
 
       const userResponse = {
         fullName,
@@ -73,14 +67,8 @@ class Auth extends BaseController {
   async login(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await models.User.findOne({
+      const user = await User.findOne({
         where: { email },
-        include: [
-          {
-            model: models.UserType,
-            as: "usertypes",
-          },
-        ],
       });
 
       if (user) {
@@ -147,10 +135,10 @@ class Auth extends BaseController {
   async passwordResetEmailVerification(req, res) {
     try {
       const { email } = req.body;
-      const user = await models.User.findOne({ where: { email } });
+      const user = await User.findOne({ where: { email } });
       if (user) {
         const code = generatePhoneAuthCode();
-        const savePasswordReset = await models.PasswordReset.create({
+        const savePasswordReset = await PasswordReset.create({
           code,
           userId: user.id,
         });
@@ -191,7 +179,7 @@ class Auth extends BaseController {
   async passwordResetCodeVerification(req, res) {
     try {
       const { phoneCode } = req.body;
-      const passwordReset = await models.PasswordReset.findOne({
+      const passwordReset = await PasswordReset.findOne({
         where: { userId: req.user.id },
         order: [["id", "DESC"]],
       });
@@ -232,7 +220,7 @@ class Auth extends BaseController {
     try {
       const { user } = req;
       const { password } = req.body;
-      const passwordReset = await models.PasswordReset.findOne({
+      const passwordReset = await PasswordReset.findOne({
         where: { userId: req.user.id },
         order: [["id", "DESC"]],
       });

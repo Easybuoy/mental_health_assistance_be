@@ -43,43 +43,43 @@ Router.post(
 // @access  Public
 Router.post("/login", validateInput(validateLoginInput), login);
 
-// @route   POST api/auth/verifyphonecode
-// @desc    Verify phone code
-// @access  Private
-Router.post(
-  "/verifyphonecode",
-  validateToken,
-  validateInput(validateVerifyPhoneCodeInput),
-  verifyPhoneCode
-);
+// // @route   POST api/auth/verifyphonecode
+// // @desc    Verify phone code
+// // @access  Private
+// Router.post(
+//   "/verifyphonecode",
+//   validateToken,
+//   validateInput(validateVerifyPhoneCodeInput),
+//   verifyPhoneCode
+// );
 
-// @route   POST api/auth/password-reset-email-verification
-// @desc    Password reset email verification
-// @access  Public
-Router.post(
-  "/password-reset-email-verification",
-  validateInput(validatePasswordResetEmailVerificationInput),
-  passwordResetEmailVerification
-);
+// // @route   POST api/auth/password-reset-email-verification
+// // @desc    Password reset email verification
+// // @access  Public
+// Router.post(
+//   "/password-reset-email-verification",
+//   validateInput(validatePasswordResetEmailVerificationInput),
+//   passwordResetEmailVerification
+// );
 
-// @route   POST api/auth/password-reset-code-verification
-// @desc    Password reset code verification
-// @access  Public
-Router.post(
-  "/password-reset-code-verification",
-  validateToken,
-  validateInput(validateVerifyPhoneCodeInput),
-  passwordResetCodeVerification
-);
+// // @route   POST api/auth/password-reset-code-verification
+// // @desc    Password reset code verification
+// // @access  Public
+// Router.post(
+//   "/password-reset-code-verification",
+//   validateToken,
+//   validateInput(validateVerifyPhoneCodeInput),
+//   passwordResetCodeVerification
+// );
 
-// @route   POST api/auth/password-reset
-// @desc    Verify phone code
-// @access  Private
-Router.post(
-  "/password-reset",
-  validateToken,
-  validateInput(validatePasswordResetInput),
-  passwordReset
-);
+// // @route   POST api/auth/password-reset
+// // @desc    Verify phone code
+// // @access  Private
+// Router.post(
+//   "/password-reset",
+//   validateToken,
+//   validateInput(validatePasswordResetInput),
+//   passwordReset
+// );
 
 export default Router;

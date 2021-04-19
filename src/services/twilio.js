@@ -1,6 +1,5 @@
 import twillio from "twilio";
 
-import models from "../database/models";
 import configVariables from "../config";
 
 const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = configVariables;
@@ -31,9 +30,9 @@ class TwilioService {
         model[key] = true;
         await model.save();
       }
-      await models.SmsLog.create({ request, response: res });
+      // await models.SmsLog.create({ request, response: res });
     } catch (error) {
-      await models.SmsLog.create({ request, response: JSON.stringify(error) });
+      // await models.SmsLog.create({ request, response: JSON.stringify(error) });
       // create a cron job to retry if request fails
     }
   }

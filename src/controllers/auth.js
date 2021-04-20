@@ -1,9 +1,7 @@
 import BaseController from "./base";
 import { generatePhoneAuthCode, generateToken } from "../utils";
 
-import configVariables from "../config";
-
-import User from '../database/models/User';
+import User from '../database/models/user';
 
 
 class Auth extends BaseController {

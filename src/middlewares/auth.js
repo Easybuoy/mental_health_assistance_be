@@ -1,4 +1,4 @@
-import User from '../database/models/User';
+import User from '../database/models/user';
 import BaseController from '../controllers/base';
 
 class AuthMiddleware extends BaseController {

@@ -43,7 +43,7 @@ export const validateToken = async (req, res, next) => {
     if (data) {
       req.user_id = data.id;
       const existingUser = await User.findOne({
-        where: { id: req.user_id },
+         id: req.user_id,
       });
       if (!existingUser) {
         return res

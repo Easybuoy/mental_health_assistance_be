@@ -3,14 +3,11 @@ import express from "express";
 import AuthController from "../controllers/auth";
 import AuthMiddleware from "../middlewares/auth";
 
-import { validateInput, validateToken } from "../middlewares";
+import { validateInput } from "../middlewares";
 
 import {
   validateSignupInput,
   validateLoginInput,
-  validateVerifyPhoneCodeInput,
-  validatePasswordResetEmailVerificationInput,
-  validatePasswordResetInput
 } from "../validations/auth";
 
 const Router = express.Router();
@@ -22,10 +19,6 @@ const { validateSignup } = authMiddeware;
 const {
   register,
   login,
-  verifyPhoneCode,
-  passwordResetEmailVerification,
-  passwordResetCodeVerification,
-  passwordReset
 } = authController;
 
 // @route   POST api/auth/register
@@ -51,25 +44,6 @@ Router.post("/login", validateInput(validateLoginInput), login);
 //   validateToken,
 //   validateInput(validateVerifyPhoneCodeInput),
 //   verifyPhoneCode
-// );
-
-// // @route   POST api/auth/password-reset-email-verification
-// // @desc    Password reset email verification
-// // @access  Public
-// Router.post(
-//   "/password-reset-email-verification",
-//   validateInput(validatePasswordResetEmailVerificationInput),
-//   passwordResetEmailVerification
-// );
-
-// // @route   POST api/auth/password-reset-code-verification
-// // @desc    Password reset code verification
-// // @access  Public
-// Router.post(
-//   "/password-reset-code-verification",
-//   validateToken,
-//   validateInput(validateVerifyPhoneCodeInput),
-//   passwordResetCodeVerification
 // );
 
 // // @route   POST api/auth/password-reset

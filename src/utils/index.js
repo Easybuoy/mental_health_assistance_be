@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 import configVariables from "../config";
 
 export const generatePhoneAuthCode = () => {
@@ -10,3 +11,15 @@ export const generateToken = (payload) =>
 
 export const verifyToken = (payload) =>
   jwt.verify(payload, configVariables.JWT_SECRET);
+
+export const generatePasswordHash = (password) => {
+  if (password) {
+    return bcrypt.hashSync(password, parseInt(configVariables.SALT_ROUNDS));
+  }
+  return null;
+}
+
+export const validatePassword = (existingPassword, password) => {
+  const isValid = bcrypt.compareSync(password, existingPassword);
+  return isValid;
+};

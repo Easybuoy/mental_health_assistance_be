@@ -1,13 +1,11 @@
 import BaseController from "./base";
 import { generatePhoneAuthCode, generateToken } from "../utils";
-import TwilioService from "../services/twilio";
+
 import configVariables from "../config";
 
 import User from '../database/models/User';
 
-const twilioController = new TwilioService();
 
-const { sendAccountVerificationCode } = twilioController;
 class Auth extends BaseController {
   /**
    * Register Route
@@ -36,7 +34,6 @@ class Auth extends BaseController {
         createdAt,
         updatedAt,
       } = user;
-      
 
       const userResponse = {
         fullName,
@@ -68,17 +65,18 @@ class Auth extends BaseController {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({
-        where: { email },
+         email
       });
 
       if (user) {
         const isValidPassword = await user.validatePassword(password);
+
         if (isValidPassword) {
           const token = generateToken({
             email,
             id: user.id,
-            userType: user.usertypes.name,
-            isPhoneVerified: false,
+            userType: user.userType,
+            isPhoneVerified: user.isPhoneVerified,
           });
           return super.success(res, 200, "User login successful", {
             token,
@@ -122,125 +120,7 @@ class Auth extends BaseController {
       return super.error(res, 500, "Unable to verify phone code");
     }
   }
-
-  /**
-   * passwordResetEmailVerification
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} object
-   * @route POST api/auth/passwordResetEmailVerification
-   * @description This function implements the logic for passwordResetEmailVerification.
-   * @access Public
-   */
-  async passwordResetEmailVerification(req, res) {
-    try {
-      const { email } = req.body;
-      const user = await User.findOne({ where: { email } });
-      if (user) {
-        const code = generatePhoneAuthCode();
-        const savePasswordReset = await PasswordReset.create({
-          code,
-          userId: user.id,
-        });
-
-        const token = generateToken({ id: user.id });
-
-        const body = `Dear ${user.fullName}, your password reset code is ${code}.`;
-        const sendCode = await sendAccountVerificationCode(
-          body,
-          configVariables.TWILIO_PHONE_NUMBER,
-          user.phone,
-          savePasswordReset,
-          "isResetCodeSent"
-        );
-
-        return super.success(
-          res,
-          200,
-          "Password reset code sent successfully",
-          { token }
-        );
-      }
-      return super.error(res, 400, "User not found");
-    } catch (error) {
-      return super.error(res, 500, "Unable to send password reset code");
-    }
-  }
-
-  /**
-   * passwordResetCodeVerification
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} object
-   * @route POST api/auth/passwordResetCodeVerification
-   * @description This function implements the logic for passwordResetCodeVerification.
-   * @access Public
-   */
-  async passwordResetCodeVerification(req, res) {
-    try {
-      const { phoneCode } = req.body;
-      const passwordReset = await PasswordReset.findOne({
-        where: { userId: req.user.id },
-        order: [["id", "DESC"]],
-      });
-
-      if (passwordReset) {
-        const validateCode = passwordReset.validatePhoneVerificationCode(
-          phoneCode
-        );
-
-        if (validateCode) {
-          passwordReset.isResetCodeVerified = true;
-          await passwordReset.save();
-          return super.success(
-            res,
-            200,
-            "Password reset code verified successfully"
-          );
-        }
-
-        return super.error(res, 400, "Invalid code");
-      }
-      return super.error(res, 400, "Reset code not found");
-    } catch (error) {
-      return super.error(res, 500, "Unable to send password reset code");
-    }
-  }
-
-  /**
-   * passwordReset
-   * @param {object} req
-   * @param {object} res
-   * @returns {object} object
-   * @route POST api/auth/passwordReset
-   * @description This function implements the logic for passwordReset.
-   * @access Public
-   */
-  async passwordReset(req, res) {
-    try {
-      const { user } = req;
-      const { password } = req.body;
-      const passwordReset = await PasswordReset.findOne({
-        where: { userId: req.user.id },
-        order: [["id", "DESC"]],
-      });
-
-      if (!passwordReset.isResetCodeVerified) {
-        return super.error(
-          res,
-          400,
-          "Password reset code hasn't been verified yet"
-        );
-      }
-
-      user.password = password;
-      await user.save();
-
-      return super.success(res, 200, "Password changed successfully");
-    } catch (error) {
-      return super.error(res, 500, "Unable to reset password");
-    }
-  }
 }
+
 
 export default Auth;

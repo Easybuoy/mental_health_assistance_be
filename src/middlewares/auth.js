@@ -15,20 +15,20 @@ class AuthMiddleware extends BaseController {
     const existingUser = await User.findOne({
       $or: [{ phone: phone }, { email: email }],
     });
-    console.log(existingUser);
+
     if (existingUser) {
       if (
-        existingUser.phone === req.body.phone &&
-        existingUser.email === req.body.email
+        existingUser.phone === phone &&
+        existingUser.email === email
       ) {
         return super.error(res, 400, 'Email and Phone already exists');
       }
 
-      if (existingUser.phone === req.body.phone) {
+      if (existingUser.phone === phone) {
         return super.error(res, 400, 'Phone already exists');
       }
 
-      if (existingUser.email === req.body.email) {
+      if (existingUser.email === email) {
         return super.error(res, 400, 'Email already exists');
       }
     }

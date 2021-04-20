@@ -34,7 +34,6 @@
     "moment": "^2.29.1",
     "mongoose": "^5.12.5",
     "socket.io": "^4.0.1",
-    "twilio": "^3.48.2",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {

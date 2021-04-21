@@ -46,7 +46,7 @@ const validateSignupInput = (input) => {
     }
   }
 
-  if (!Validator.isMobilePhone(data.phone, ["en-NG"], { strictMode: true })) {
+  if (!Validator.isMobilePhone(data.phone, ["en-NG"], { strictMode: false })) {
     errors.phone = "Phone number is not valid";
   }
 

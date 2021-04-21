@@ -15,7 +15,6 @@ const UserSchema = new Schema({
   fullName: {
     type: String,
     required: true,
-    unique: true,
   },
   userType: {
     type: Number,

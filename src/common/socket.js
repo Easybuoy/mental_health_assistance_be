@@ -11,8 +11,6 @@ export const runSocketFunctions = (io) => {
         _id: recepientId,
       }).select('-_id');
       socket.emit('user mame', user.fullName);
-
-      socket.emit('messages', messages);
     });
 
     socket.on('get messages', async (recepientId) => {

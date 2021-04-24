@@ -3,20 +3,20 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import xss from 'xss-clean';
-// import socketio from 'socket.io';
+import socketio from 'socket.io';
+
 
 import authRoutes from './routes/auth';
+import { runSocketFunctions } from './common/socket';
+
 require('./config/db');
 const app = express();
 const server = http.createServer(app);
-// const io = socketio(server);
+const io = socketio(server);
 
-// io.on('connection', (socket) => {
-//   console.log('emited');
-//   socket.emit('message', 'Chale')
-// });
+runSocketFunctions(io);
 
-// 
+//
 // Json Body Parser
 app.use(express.json({ limit: '10kb' }));
 

@@ -46,7 +46,6 @@ class Auth extends BaseController {
         user: userResponse,
       });
     } catch (error) {
-      console.log(error)
       return super.error(res, 500, "Unable to register user");
     }
   }

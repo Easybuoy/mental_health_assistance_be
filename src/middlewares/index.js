@@ -41,10 +41,12 @@ export const validateToken = async (req, res, next) => {
     const data = verifyToken(token);
 
     if (data) {
-      req.user_id = data.id;
+
+      req.userId = data.id;
       const existingUser = await User.findOne({
-         id: req.user_id,
-      });
+         _id: req.userId,
+      }).select('-password');
+
       if (!existingUser) {
         return res
           .status(404)

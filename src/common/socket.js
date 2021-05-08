@@ -39,7 +39,7 @@ export const runSocketFunctions = (io) => {
     // Initial call
     socket.on('initCall', (data) => {
       io.to(data.userToCall).emit('hi', {
-        from: data.from
+        from: data.from,
       });
     });
 
@@ -55,8 +55,15 @@ export const runSocketFunctions = (io) => {
     });
 
     socket.on('acceptCall', (data) => {
-      console.log(data, 'dat')
       io.to(data.to).emit('callAccepted', data.signal);
+    });
+
+    socket.on('disconnectCall', (data) => {
+      io.to(data.to).emit('callDisconnected');
+    });
+
+    socket.on('declineCall', (data) => {
+      io.to(data.to).emit('callDeclined');
     });
   });
 };

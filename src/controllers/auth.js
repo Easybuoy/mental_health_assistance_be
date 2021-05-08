@@ -75,6 +75,7 @@ class Auth extends BaseController {
             id: user.id,
             userType: user.userType,
             isPhoneVerified: user.isPhoneVerified,
+            name: user.fullName
           });
           return super.success(res, 200, "User login successful", {
             token,

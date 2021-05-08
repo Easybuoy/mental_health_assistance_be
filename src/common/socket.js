@@ -36,6 +36,17 @@ export const runSocketFunctions = (io) => {
     });
 
     // Call
+    // Initial call
+    socket.on('initCall', (data) => {
+      io.to(data.userToCall).emit('hi', {
+        from: data.from
+      });
+    });
+
+    socket.on('initAcceptCall', (data) => {
+      io.to(data.to).emit('initCallAccepted');
+    });
+
     socket.on('callUser', (data) => {
       io.to(data.userToCall).emit('hey', {
         signal: data.signalData,
@@ -44,6 +55,7 @@ export const runSocketFunctions = (io) => {
     });
 
     socket.on('acceptCall', (data) => {
+      console.log(data, 'dat')
       io.to(data.to).emit('callAccepted', data.signal);
     });
   });

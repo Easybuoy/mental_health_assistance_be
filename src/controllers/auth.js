@@ -20,7 +20,7 @@ class Auth extends BaseController {
       const user = await User.create({
         ...req.body,
         isActive: true,
-        image: req.image ? req.image : DEFAULT.PROFILE_IMAGE,
+        image: req.body.image ? req.body.image : DEFAULT.PROFILE_IMAGE,
         phoneVerificationCode: generatedPhoneAuthCode,
       });
 

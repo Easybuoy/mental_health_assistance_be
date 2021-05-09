@@ -16,7 +16,7 @@ const {
 // @route   GET api/users/getUsers
 // @desc    Get users
 // @access  Private
-Router.get("/getUsers", validateToken , getUsers);
+Router.get("/getPeers", validateToken , getUsers);
 
 // @route   GET api/users/getUsers
 // @desc    Get users

@@ -15,14 +15,17 @@ class Users extends BaseController {
   async getUsers(req, res) {
     try {
       const users = await User.find({
-        $or: [{ userType: 1 }, { userType: 2 }],
-      }).select('-password');
+        $and: [
+          { _id: { $ne: req.userId } },
+          { $or: [{ userType: 1 }, { userType: 2 }] },
+        ],
+      }).select(['-password', '-phoneVerificationCode', '-isPhoneVerified']);
 
       return super.success(res, 200, 'Users gotten successfully', {
         users,
       });
     } catch (error) {
-      return super.error(res, 500, 'Unable to get users');
+      return super.error(res, 500, 'Unable to get peers');
     }
   }
 
@@ -35,10 +38,10 @@ class Users extends BaseController {
    * @description This function implements the logic for getting all therapists.
    * @access Public
    */
-   async getTherapists(req, res) {
+  async getTherapists(req, res) {
     try {
       const therapists = await User.find({
-        userType: 3
+        userType: 3,
       }).select('-password');
 
       return super.success(res, 200, 'Users gotten successfully', {

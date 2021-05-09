@@ -42,7 +42,7 @@ class Users extends BaseController {
     try {
       const therapists = await User.find({
         userType: 3,
-      }).select('-password');
+      }).select(['-password', '-phoneVerificationCode', '-isPhoneVerified']);
 
       return super.success(res, 200, 'Users gotten successfully', {
         therapists,

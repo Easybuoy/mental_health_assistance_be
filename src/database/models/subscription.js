@@ -2,16 +2,16 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const ChatSchema = new Schema({
-  senderId: {
+const SubscriptionSchema = new Schema({
+  userId: {
     type: Schema.Types.ObjectId,
     required: true,
   },
-  recepientId: {
+  therapistUserId: {
     type: Schema.Types.ObjectId,
     required: true,
   },
-  message: {
+  plan: {
     type: String,
     required: true,
   },
@@ -21,6 +21,6 @@ const ChatSchema = new Schema({
   },
 });
 
-const Chat = mongoose.model('chat', ChatSchema);
+const Subscription = mongoose.model('subscription', SubscriptionSchema);
 
-export default Chat;
+export default Subscription;

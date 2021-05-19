@@ -55,6 +55,11 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  hasActiveSubscription: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: false,
+  },
   isPhoneVerified: {
     type: Schema.Types.Boolean,
     required: true,

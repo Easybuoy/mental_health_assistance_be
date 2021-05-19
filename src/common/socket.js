@@ -17,7 +17,7 @@ export const runSocketFunctions = (io) => {
       const messages = await Chat.find({
         $and: [
           { $or: [{ senderId: id }, { senderId: recepientId }] },
-          { $or: [{ recepientUserId: recepientId }, { recepientUserId: id }] },
+          { $or: [{ recepientId: recepientId }, { recepientId: id }] },
         ],
       }).select('-_id');
 
@@ -27,7 +27,7 @@ export const runSocketFunctions = (io) => {
     socket.on('send message', async ({ senderId, message, recepientId }) => {
       const payload = {
         senderId: senderId,
-        recepientUserId: recepientId,
+        recepientId: recepientId,
         message: message,
       };
 

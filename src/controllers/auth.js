@@ -80,6 +80,7 @@ class Auth extends BaseController {
             isPhoneVerified: user.isPhoneVerified,
             name: user.fullName,
             userType: user.userTypeString,
+            hasActiveSubscription: user.hasActiveSubscription,
           });
           return super.success(res, 200, 'User login successful', {
             token,

@@ -18,7 +18,7 @@ const { getUserSubscriptions, getTherapistSubscriptions, createSubscription } =
 // @route   GET api/subscription/createSubscription
 // @desc    Get users
 // @access  Private
-Router.get(
+Router.post(
   '/createSubscription',
   validateInput(validateCreateSubscriptionInput),
   validateToken,

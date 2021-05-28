@@ -21,7 +21,7 @@ class Users extends BaseController {
         ],
       }).select(['-password', '-phoneVerificationCode', '-isPhoneVerified']);
 
-      return super.success(res, 200, 'Users gotten successfully', {
+      return super.success(res, 200, 'Peers gotten successfully', {
         users,
       });
     } catch (error) {
@@ -44,7 +44,7 @@ class Users extends BaseController {
         userType: 3,
       }).select(['-password', '-phoneVerificationCode', '-isPhoneVerified']);
 
-      return super.success(res, 200, 'Users gotten successfully', {
+      return super.success(res, 200, 'Therapists gotten successfully', {
         therapists,
       });
     } catch (error) {

@@ -26,13 +26,11 @@ class Subscription extends BaseController {
         { $set: { hasActiveSubscription: true } },
         { new: true, runValidators: true }
       );
-      console.log(me, 'me');
 
       return super.success(res, 200, 'Subscription created successfully', {
         subscription,
       });
     } catch (error) {
-      console.log(error, 'e');
       return super.error(res, 500, 'Unable to create subscription');
     }
   }

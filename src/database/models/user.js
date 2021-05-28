@@ -2,63 +2,78 @@ import mongoose from 'mongoose';
 import {
   generatePasswordHash,
   validatePassword as validatePasswordHash,
+  convertUserType,
 } from '../../utils';
 
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   email: {
-    type: String,
+    type: Schema.Types.String,
     required: true,
     unique: true,
   },
   fullName: {
-    type: String,
+    type: Schema.Types.String,
     required: true,
-    unique: true,
   },
   userType: {
-    type: Number,
+    type: Schema.Types.Number,
     required: true,
     default: 1,
   },
+  userTypeString: {
+    type: Schema.Types.String,
+    required: true,
+    default: 'User',
+  },
   terms: {
-    type: Boolean,
+    type: Schema.Types.Boolean,
     required: true,
     default: false,
   },
   phone: {
-    type: String,
+    type: Schema.Types.String,
     required: true,
     unique: true,
   },
   password: {
-    type: String,
+    type: Schema.Types.String,
+    required: true,
+  },
+  image: {
+    type: Schema.Types.String,
     required: true,
   },
   isActive: {
-    type: Boolean,
+    type: Schema.Types.Boolean,
     required: true,
     default: false,
   },
   phoneVerificationCode: {
-    type: Number,
+    type: Schema.Types.Number,
     required: true,
     unique: true,
   },
+  hasActiveSubscription: {
+    type: Schema.Types.Boolean,
+    required: true,
+    default: false,
+  },
   isPhoneVerified: {
-    type: Boolean,
+    type: Schema.Types.Boolean,
     required: true,
     default: false,
   },
   date: {
-    type: Date,
+    type: Schema.Types.Date,
     default: Date.now,
   },
 });
 
 UserSchema.pre('save', function () {
   this.password = generatePasswordHash(this.password);
+  this.userTypeString = convertUserType(this.userType);
 });
 
 const User = mongoose.model('users', UserSchema);

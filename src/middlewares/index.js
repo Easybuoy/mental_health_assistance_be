@@ -1,5 +1,5 @@
-import User from "../database/models/user";
-import { verifyToken } from "../utils";
+import User from '../database/models/user';
+import { verifyToken } from '../utils';
 
 /**
  * validateInput
@@ -15,7 +15,7 @@ export const validateInput = (validationMethod) => (req, res, next) => {
 
   // Check validation
   if (!isValid) {
-    return res.status(400).json({ status: "error", errors });
+    return res.status(400).json({ status: 'error', errors });
   }
 
   next();
@@ -34,21 +34,22 @@ export const validateToken = async (req, res, next) => {
   if (!token) {
     return res
       .status(401)
-      .json({ status: "error", message: "No Token Provided" });
+      .json({ status: 'error', message: 'No Token Provided' });
   }
 
   try {
     const data = verifyToken(token);
 
     if (data) {
-      req.user_id = data.id;
+      req.userId = data.id;
       const existingUser = await User.findOne({
-         id: req.user_id,
-      });
+        _id: req.userId,
+      }).select('-password');
+
       if (!existingUser) {
         return res
           .status(404)
-          .json({ status: "error", message: "User Not Found" });
+          .json({ status: 'error', message: 'User Not Found' });
       }
       req.user = existingUser;
       next();
@@ -56,6 +57,40 @@ export const validateToken = async (req, res, next) => {
   } catch (error) {
     return res
       .status(401)
-      .json({ status: "error", message: "Invalid Token Provided" });
+      .json({ status: 'error', message: 'Invalid Token Provided' });
   }
+};
+
+/**
+ * Validate Therapist
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} object
+ * @description This function checks if the user is a therapist.
+ */
+export const isTherapist = (req, res, next) => {
+  if (req.user.userType !== 3) {
+    return res
+      .status(403)
+      .json({ message: 'Forbidden from accessing this resource' });
+  }
+  next();
+};
+
+/**
+ * Validate User
+ * @param {object} req
+ * @param {object} res
+ * @param {object} next
+ * @returns {object} object
+ * @description This function checks if the user is a normal user.
+ */
+ export const isUser = (req, res, next) => {
+  if (req.user.userType !== 1 && req.user.userType !== 2) {
+    return res
+      .status(403)
+      .json({ message: 'Forbidden from accessing this resource' });
+  }
+  next();
 };

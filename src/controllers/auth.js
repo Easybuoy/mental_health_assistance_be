@@ -1,8 +1,8 @@
-import BaseController from "./base";
-import { generatePhoneAuthCode, generateToken } from "../utils";
+import BaseController from './base';
+import { generatePhoneAuthCode, generateToken } from '../utils';
 
 import User from '../database/models/user';
-
+import DEFAULT from '../config/constants';
 
 class Auth extends BaseController {
   /**
@@ -20,6 +20,7 @@ class Auth extends BaseController {
       const user = await User.create({
         ...req.body,
         isActive: true,
+        image: req.body.image ? req.body.image : DEFAULT.PROFILE_IMAGE,
         phoneVerificationCode: generatedPhoneAuthCode,
       });
 
@@ -29,8 +30,9 @@ class Auth extends BaseController {
         phone,
         isPhoneVerified,
         isActive,
-        createdAt,
-        updatedAt,
+        userTypeString,
+        image,
+        date,
       } = user;
 
       const userResponse = {
@@ -39,14 +41,15 @@ class Auth extends BaseController {
         phone,
         isPhoneVerified,
         isActive,
-        createdAt,
-        updatedAt,
+        image,
+        date,
+        userType: userTypeString,
       };
-      return super.success(res, 201, "User registered successfully", {
+      return super.success(res, 201, 'User registered successfully', {
         user: userResponse,
       });
     } catch (error) {
-      return super.error(res, 500, "Unable to register user");
+      return super.error(res, 500, 'Unable to register user');
     }
   }
 
@@ -63,7 +66,7 @@ class Auth extends BaseController {
     try {
       const { email, password } = req.body;
       const user = await User.findOne({
-         email
+        email,
       });
 
       if (user) {
@@ -75,17 +78,20 @@ class Auth extends BaseController {
             id: user.id,
             userType: user.userType,
             isPhoneVerified: user.isPhoneVerified,
+            name: user.fullName,
+            userType: user.userTypeString,
+            hasActiveSubscription: user.hasActiveSubscription,
           });
-          return super.success(res, 200, "User login successful", {
+          return super.success(res, 200, 'User login successful', {
             token,
           });
         }
-        return super.error(res, 401, "Invalid login details!");
+        return super.error(res, 401, 'Invalid login details!');
       }
 
-      return super.error(res, 401, "Invalid login details!");
+      return super.error(res, 401, 'Invalid login details!');
     } catch (error) {
-      return super.error(res, 500, "Unable to login user");
+      return super.error(res, 500, 'Unable to login user');
     }
   }
 
@@ -103,22 +109,21 @@ class Auth extends BaseController {
       const { user } = req;
       const { phoneCode } = req.body;
       if (user.isPhoneVerified == true) {
-        return super.error(res, 400, "Phone already verified");
+        return super.error(res, 400, 'Phone already verified');
       }
 
       if (user.validatePhoneVerificationCode(phoneCode)) {
         user.isPhoneVerified = true;
         await user.save();
 
-        return super.success(res, 200, "Phone verified successfully");
+        return super.success(res, 200, 'Phone verified successfully');
       }
 
-      return super.error(res, 400, "Invalid verification code");
+      return super.error(res, 400, 'Invalid verification code');
     } catch (error) {
-      return super.error(res, 500, "Unable to verify phone code");
+      return super.error(res, 500, 'Unable to verify phone code');
     }
   }
 }
-
 
 export default Auth;

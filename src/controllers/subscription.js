@@ -15,10 +15,20 @@ class Subscription extends BaseController {
    */
   async createSubscription(req, res) {
     try {
+      const recentSubscription = await Subscriptions.findOneAndUpdate(
+        {
+          userId: req.userId,
+          isActive: true,
+        },
+        { $set: { isActive: false } },
+        { new: true, runValidators: true }
+      ).sort('-date');
+
       const subscription = await Subscriptions.create({
         userId: req.userId,
         therapistUserId: req.body.therapistUserId,
         plan: 1,
+        isActive: true,
       });
 
       await User.findOneAndUpdate(

@@ -96,6 +96,35 @@ class Auth extends BaseController {
   }
 
   /**
+   * Login Route
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} object
+   * @route POST api/auth/login
+   * @description This function implements the logic for logging in a new user.
+   * @access Public
+   */
+  async getUserToken(req, res) {
+    try {
+      const { user } = req;
+      const token = generateToken({
+        email: user.email,
+        id: user.id,
+        userType: user.userType,
+        isPhoneVerified: user.isPhoneVerified,
+        name: user.fullName,
+        userType: user.userTypeString,
+        hasActiveSubscription: user.hasActiveSubscription,
+      });
+      return super.success(res, 200, 'User token generated successfully', {
+        token,
+      });
+    } catch (error) {
+      return super.error(res, 500, 'Unable to get user token');
+    }
+  }
+
+  /**
    * Verify Phone Code Route
    * @param {object} req
    * @param {object} res

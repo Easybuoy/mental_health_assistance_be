@@ -9,6 +9,7 @@ import {
   validateSignupInput,
   validateLoginInput,
 } from "../validations/auth";
+import { validateToken } from '../middlewares';
 
 const Router = express.Router();
 
@@ -19,6 +20,7 @@ const { validateSignup } = authMiddeware;
 const {
   register,
   login,
+  getUserToken,
 } = authController;
 
 // @route   POST api/auth/register
@@ -35,6 +37,11 @@ Router.post(
 // @desc    Login user
 // @access  Public
 Router.post("/login", validateInput(validateLoginInput), login);
+
+// @route   PRIVATE api/auth/getUserToken
+// @desc    Login user
+// @access  Public
+Router.get("/getUserToken", validateToken , getUserToken);
 
 // // @route   POST api/auth/verifyphonecode
 // // @desc    Verify phone code

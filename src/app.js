@@ -9,6 +9,7 @@ import socketio from 'socket.io';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import subscriptionRoutes from './routes/subscription';
+import paymentRoutes from './routes/payment';
 import { runSocketFunctions } from './common/socket';
 
 require('./config/db');
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/payment', paymentRoutes);
 
 app.use((req, res, next) => {
   const error = new Error('Route Not found');
